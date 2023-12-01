@@ -39,7 +39,7 @@ export class Room {
         this.addPlayer(host)
 
         rooms.push(this)
-        host.socket.emit("room:new", this)
+        // host.socket.emit("room:new:success", { player: host, room: this })
         host.socket.broadcast.emit("room:new", this)
     }
 
@@ -49,7 +49,7 @@ export class Room {
 
         player.socket.join(this.id)
         player.socket.emit("room:join", { room: this, player })
-        player.socket.to(this.id).emit("room:player", player)
+        player.socket.to(this.id).emit("room:update", this)
     }
 
     findPlayer = (player_id: string) => {
@@ -72,8 +72,8 @@ export class Room {
 
                 Room.print(`new host ${this.host.name}`)
             }
+            this.host.socket.emit("room:update", this)
             this.host.socket.to(this.id).emit("room:update", this)
-            this.host.socket.broadcast.to(this.id).emit("room:update", this)
         }
     }
 
