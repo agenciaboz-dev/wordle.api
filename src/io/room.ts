@@ -53,12 +53,7 @@ const onPlayerDisconnected = (socket: Socket) => {
     }
 }
 
-const startGame = (socket: Socket, room_id: string) => {
-    const room = Room.find(room_id)
-    if (room) {
-        room.startGame()
-    }
-}
+
 
 const update = (socket: Socket, data: UpdateRoom) => {
     const room = Room.find(data.id)
@@ -70,4 +65,4 @@ const update = (socket: Socket, data: UpdateRoom) => {
     }
 }
 
-export default { list, create, join, onPlayerDisconnected, leave, startGame, update }
+export default { list, create, join, onPlayerDisconnected, leave, update }

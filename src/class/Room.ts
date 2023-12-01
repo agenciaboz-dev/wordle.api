@@ -84,6 +84,7 @@ export class Room {
 
     startGame = () => {
         this.game = new Game(this, this.difficulty)
+        this.game.io.to(this.id).emit("room:update", this)
     }
 
     update = (data: UpdateRoom) => {

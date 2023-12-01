@@ -20,4 +20,11 @@ export class Player {
     toJSON() {
         return { ...this, socket: null }
     }
+
+    win = (difficulty: number) => {
+        const score = 10 * difficulty - 10 * this.history.length
+        this.score += score
+
+        this.socket.emit("game:win")
+    }
 }
