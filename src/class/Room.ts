@@ -2,6 +2,7 @@ import { uid } from "uid"
 import { Player } from "./Player"
 import { Socket } from "socket.io"
 import { Game } from "./Game"
+import { getIoInstance } from "../io/socket"
 
 let rooms: Room[] = []
 
@@ -38,6 +39,8 @@ export class Room {
         this.addPlayer(host)
 
         rooms.push(this)
+        host.socket.emit("room:new", this)
+        host.socket.broadcast.emit("room:new", this)
     }
 
     addPlayer = (player: Player) => {
@@ -45,8 +48,8 @@ export class Room {
         this.players.push(player)
 
         player.socket.join(this.id)
-        player.socket.emit('room:join', {room: this, player})
-        player.socket.to(this.id).emit('room:player', player)
+        player.socket.emit("room:join", { room: this, player })
+        player.socket.to(this.id).emit("room:player", player)
     }
 
     findPlayer = (player_id: string) => {
@@ -56,10 +59,12 @@ export class Room {
     removePlayer = (player: Player) => {
         Room.print(`removing player ${player.name} from ${this.name}`)
 
-        this.players = this.players.filter(item => item != player)
+        this.players = this.players.filter((item) => item != player)
         if (this.players.length == 0) {
             Room.print(`room is empty, self destroying`)
-            rooms = rooms.filter(room => room != this)
+            rooms = rooms.filter((room) => room != this)
+            const io = getIoInstance()
+            io.emit("room:remove", this)
         } else {
             if (this.host == player) {
                 Room.print(`${player.name} was the host`)
@@ -67,6 +72,8 @@ export class Room {
 
                 Room.print(`new host ${this.host.name}`)
             }
+            this.host.socket.to(this.id).emit("room:update", this)
+            this.host.socket.broadcast.to(this.id).emit("room:update", this)
         }
     }
 
