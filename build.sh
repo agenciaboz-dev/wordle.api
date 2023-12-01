@@ -1,6 +1,6 @@
 #!/bin/bash
 
-api="casaludica-api"
+api="bozletrando.api"
 user="burgos"
 
 
