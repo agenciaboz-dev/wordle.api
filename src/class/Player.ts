@@ -7,6 +7,7 @@ export class Player {
     avatar: string
     score: number = 0
     history: string[] = []
+    ready: boolean = true
 
     socket: Socket
 
@@ -24,7 +25,13 @@ export class Player {
     win = (difficulty: number) => {
         const score = 10 * difficulty - 10 * this.history.length + 10
         this.score += score
+        this.ready = true
 
-        this.socket.emit("game:win")
+        this.socket.emit("game:win", score)
+    }
+
+    lose = () => {
+        this.ready = true
+        this.socket.emit("game:lose")
     }
 }

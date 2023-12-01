@@ -2,11 +2,12 @@ import { Server } from "socket.io"
 import { getIoInstance } from "../io/socket"
 import { DefaultEventsMap } from "socket.io/dist/typed-events"
 import { Room } from "./Room"
-import { words } from "../words"
 import { Player } from "./Player"
+import { words } from "../words2"
+import { normalize } from "path"
 
 export class Game {
-    round: number = 1
+    round: number = 0
     difficulty: number
     word: string
 
@@ -24,7 +25,7 @@ export class Game {
     static randomWord = (difficulty: number) => {
         // to do: get word with lengh matching diff
         const random = Math.floor(Math.random() * words.length)
-        return words[random]
+        return normalize(words[random])
     }
 
     constructor(room: Room, difficulty: number) {
@@ -51,12 +52,34 @@ export class Game {
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
 
-        if (this.word == word) {
+        if (this.word.toLowerCase() == word.toLowerCase()) {
             player.win(this.room.difficulty)
             Game.print(`${player.name} won`)
         }
 
+        if (player.history.length == 5) {
+            player.lose()
+        }
+
         this.io.to(this.room.id).emit("room:update", this.room)
         player.socket.emit("game:attempt")
+
+        const ready = this.room.readyCheck()
+        if (ready) {
+            this.io.emit("game:ready")
+        }
+    }
+
+    nextRound = () => {
+        this.round += 1
+        this.room.players.map((player) => {
+            player.ready = false
+            player.history = []
+        })
+
+        this.word = Game.randomWord(this.room.difficulty)
+
+        this.io.to(this.room.id).emit("room:update", this.room)
+        this.io.to(this.room.id).emit("game:next_round")
     }
 }

@@ -84,6 +84,8 @@ export class Room {
 
     startGame = () => {
         this.game = new Game(this, this.difficulty)
+        this.game.nextRound()
+
         this.game.io.to(this.id).emit("room:update", this)
     }
 
@@ -94,5 +96,10 @@ export class Room {
 
         this.host.socket.to(this.id).emit("room:update", this)
         Room.print(`room ${this.id} updating`)
+    }
+
+    readyCheck = () => {
+        const all_ready = this.players.every((player) => player.ready)
+        return all_ready
     }
 }

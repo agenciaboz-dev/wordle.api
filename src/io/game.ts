@@ -18,4 +18,9 @@ const attempt = (socket: Socket, attempt: string) => {
     }
 }
 
-export default { start, stop, attempt }
+const nextRound = (socket: Socket) => {
+    const { room } = Room.findSocket(socket)
+    room?.game?.nextRound()
+}
+
+export default { start, stop, attempt, nextRound }

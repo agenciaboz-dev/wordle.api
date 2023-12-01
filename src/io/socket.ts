@@ -39,4 +39,5 @@ export const handleSocket = (socket: Socket) => {
     socket.on("game:start", () => game.start(socket))
     socket.on("game:stop", () => game.stop(socket))
     socket.on("game:attempt", (data: string) => game.attempt(socket, data))
+    socket.on("game:next_round", () => game.nextRound(socket))
 }

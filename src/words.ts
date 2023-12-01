@@ -69,5 +69,7 @@ export const words = [
     "tirar",
     "viral",
     "drama",
-    "folga"
+    "folga",
+    "harém",
+    "vesga"
 ]
