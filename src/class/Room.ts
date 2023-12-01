@@ -14,6 +14,8 @@ export class Room {
     password?: string
     game?: Game
 
+    difficulty: number = 5
+
     players: Player[] = []
 
     static list = () => rooms
@@ -41,6 +43,7 @@ export class Room {
         rooms.push(this)
         // host.socket.emit("room:new:success", { player: host, room: this })
         host.socket.broadcast.emit("room:new", this)
+        Room.print(`room id ${this.id}`)
     }
 
     addPlayer = (player: Player) => {
@@ -75,9 +78,20 @@ export class Room {
             this.host.socket.emit("room:update", this)
             this.host.socket.to(this.id).emit("room:update", this)
         }
+
+        player.socket.leave(this.id)
     }
 
     startGame = () => {
-        this.game = new Game(this, 5)
+        this.game = new Game(this, this.difficulty)
+    }
+
+    update = (data: UpdateRoom) => {
+        this.name = data.name
+        this.password = data.password
+        this.difficulty = data.difficulty
+
+        this.host.socket.to(this.id).emit("room:update", this)
+        Room.print(`room ${this.id} updating`)
     }
 }

@@ -33,6 +33,7 @@ export const handleSocket = (socket: Socket) => {
     socket.on('room:new', (data: {player: NewPlayer, room: NewRoom}) => room.create(socket, data.player, data.room))
     socket.on('room:join', (data: {player: NewPlayer, room_id: string}) => room.join(socket, data.room_id, data.player))
     socket.on('room:leave', (data: {player_id: string, room_id: string}) => room.leave(socket, data.room_id, data.player_id))
+    socket.on("room:update", (data) => room.update(socket, data))
 
     socket.on('game:start', (data: {room_id: string}) => room.startGame(socket, data.room_id))
 }
