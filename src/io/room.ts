@@ -38,8 +38,8 @@ const leave = (socket: Socket, room_id: string, player_id: string) => {
     const player = room?.findPlayer(player_id)
 
     if (player) {
+        socket.emit("room:leave", { room, player })
         room?.removePlayer(player)
-        socket.emit('room:leave', {room, player})
     }
 }
 
