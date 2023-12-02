@@ -9,7 +9,7 @@ import { normalize } from "path"
 export class Game {
     round: number = 0
     difficulty: number
-    word: string
+    word: string = ""
 
     history: string[] = []
 
@@ -17,9 +17,13 @@ export class Game {
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
     room: Room
 
-    static print = (message: any) => {
+    static print = (message: any, priority?: boolean) => {
         const log = true
-        if (log) console.log(`game: ${message}`)
+        if (log) {
+            priority && console.log()
+            console.log(`game: ${message}`)
+            priority && console.log()
+        }
     }
 
     static randomWord = (difficulty: number) => {
@@ -32,10 +36,6 @@ export class Game {
         this.room = room
         this.difficulty = difficulty
         this.io = getIoInstance()
-        this.word = Game.randomWord(difficulty)
-        this.history.push(this.word)
-
-        Game.print(`started new game. Word: ${this.word}`)
     }
 
     stop = () => {
@@ -80,6 +80,9 @@ export class Game {
         })
 
         this.word = Game.randomWord(this.room.difficulty)
+        this.history.push(this.word)
+
+        Game.print(`new word: ${this.word}`)
 
         this.io.to(this.room.id).emit("room:update", this.room)
         this.io.to(this.room.id).emit("game:next_round")
