@@ -21,6 +21,14 @@ export class Room {
     players: Player[] = []
 
     static list = () => rooms
+    static resetRooms = () => {
+        rooms.map((room) => {
+            room.players.map((player) => room.removePlayer(player))
+        })
+
+        rooms = []
+        return rooms
+    }
     static find = (id: string) => rooms.find((room) => room.id == id)
     static findSocket = (socket: Socket) => {
         const room = rooms.find((room) => room.players.find((player) => player.socket.id == socket.id))
@@ -63,6 +71,7 @@ export class Room {
 
     removePlayer = (player: Player) => {
         Room.print(`removing player ${player.name} from ${this.name}`)
+        player.socket.emit("room:leave", { room: this, player })
 
         this.players = this.players.filter((item) => item != player)
         if (this.players.length == 0) {

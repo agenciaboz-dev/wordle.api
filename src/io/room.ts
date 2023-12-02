@@ -38,7 +38,6 @@ const leave = (socket: Socket, room_id: string, player_id: string) => {
     const player = room?.findPlayer(player_id)
 
     if (player) {
-        socket.emit("room:leave", { room, player })
         room?.removePlayer(player)
     }
 }
@@ -53,8 +52,6 @@ const onPlayerDisconnected = (socket: Socket) => {
     }
 }
 
-
-
 const update = (socket: Socket, data: UpdateRoom) => {
     const room = Room.find(data.id)
     if (room) {
@@ -65,4 +62,10 @@ const update = (socket: Socket, data: UpdateRoom) => {
     }
 }
 
-export default { list, create, join, onPlayerDisconnected, leave, update }
+const reset = (socket: Socket) => {
+    const rooms = Room.resetRooms()
+    const io = getIoInstance()
+    io.emit("room:list", rooms)
+}
+
+export default { list, create, join, onPlayerDisconnected, leave, update, reset }
