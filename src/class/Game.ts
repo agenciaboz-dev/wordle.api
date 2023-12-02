@@ -56,10 +56,12 @@ export class Game {
 
         if (won) {
             player.win(this.room.difficulty)
+            player.socket.to(this.room.id).emit("player:win", player)
             Game.print(`${player.name} won`)
         }
 
         if (player.history.length == 5 && !won) {
+            player.socket.to(this.room.id).emit("player:lose", player)
             player.lose()
         }
 
