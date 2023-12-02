@@ -98,7 +98,7 @@ export class Room {
         this.game.nextRound()
 
         this.game.io.to(this.id).emit("room:update", this)
-        this.game.io.to(this.id).emit("room:list:update", this)
+        this.game.io.emit("room:list:update", this)
     }
 
     update = (data: UpdateRoom) => {
