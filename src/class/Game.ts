@@ -40,8 +40,8 @@ export class Game {
 
     stop = () => {
         Game.print("stoped game")
-        this.io.to(this.room.id).emit("game:stop")
         this.room.game = undefined
+        this.io.to(this.room.id).emit("room:update", this.room)
     }
 
     toJSON() {
