@@ -71,6 +71,8 @@ export class Game {
         const ready = this.room.readyCheck()
         if (ready) {
             this.io.emit("game:ready")
+            this.room.playing = false
+            this.io.to(this.room.id).emit("room:update", this.room)
         }
     }
 
@@ -83,10 +85,10 @@ export class Game {
 
         this.word = Game.randomWord(this.room.difficulty)
         this.history.push(this.word)
+        this.room.playing = true
 
         Game.print(`new word: ${this.word}`)
 
         this.io.to(this.room.id).emit("room:update", this.room)
-        this.io.to(this.room.id).emit("game:next_round")
     }
 }

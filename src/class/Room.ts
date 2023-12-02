@@ -11,6 +11,8 @@ export class Room {
     host: Player
     name: string
     created_at: Date
+    playing: boolean = false
+
     password?: string
     game?: Game
 
