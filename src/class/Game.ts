@@ -52,12 +52,14 @@ export class Game {
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
 
-        if (this.word.toLowerCase() == word.toLowerCase()) {
+        const won = this.word == word
+
+        if (won) {
             player.win(this.room.difficulty)
             Game.print(`${player.name} won`)
         }
 
-        if (player.history.length == 5) {
+        if (player.history.length == 5 && !won) {
             player.lose()
         }
 
