@@ -26,15 +26,17 @@ export class Game {
         }
     }
 
+    static word_list = readFileSync("dist/src/palavras.txt", "utf8").split("\n")
+
     static randomWord = (difficulty: number) => {
         // to do: get word with lengh matching diff
-        const words = readFileSync("dist/src/palavras.txt", "utf8")
-            .split("\n")
-            .filter((word) => word.length == difficulty)
+        const words = Game.word_list.filter((word) => word.length == difficulty)
 
         const random = Math.floor(Math.random() * words.length)
         return normalize(words[random])
     }
+
+    static isValid = (attempt: string) => Game.word_list.includes(attempt)
 
     constructor(room: Room, difficulty: number) {
         this.room = room
@@ -53,6 +55,11 @@ export class Game {
     }
 
     attempt = (word: string, player: Player) => {
+        if (!Game.isValid(word)) {
+            player.socket.emit("game:attempt:invalid")
+            return
+        }
+
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
 
