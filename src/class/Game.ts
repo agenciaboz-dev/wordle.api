@@ -3,8 +3,8 @@ import { getIoInstance } from "../io/socket"
 import { DefaultEventsMap } from "socket.io/dist/typed-events"
 import { Room } from "./Room"
 import { Player } from "./Player"
-import { words } from "../words2"
 import { normalize } from "path"
+import { readFileSync } from "fs"
 
 export class Game {
     round: number = 0
@@ -28,6 +28,10 @@ export class Game {
 
     static randomWord = (difficulty: number) => {
         // to do: get word with lengh matching diff
+        const words = readFileSync("dist/src/palavras.txt", "utf8")
+            .split("\n")
+            .filter((word) => word.length == difficulty)
+
         const random = Math.floor(Math.random() * words.length)
         return normalize(words[random])
     }
