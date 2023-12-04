@@ -7,7 +7,7 @@ export class Player {
     avatar: string
     score: number = 0
     history: string[] = []
-    ready: boolean = true
+    ready: boolean = false
 
     socket: Socket
 
