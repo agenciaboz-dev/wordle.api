@@ -23,7 +23,7 @@ export class Player {
     }
 
     win = (difficulty: number) => {
-        const score = 10 * difficulty - 10 * this.history.length + 10
+        const score = 10 * difficulty - 5 * this.history.length + 10
         this.score += score
         this.ready = true
 

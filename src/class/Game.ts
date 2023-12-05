@@ -9,9 +9,9 @@ import { readFileSync } from "fs"
 export class Game {
     round: number = 0
     difficulty: number
-    word: string = ""
 
     history: string[] = []
+    word: string = ""
 
     // DESERIALIZAR
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
@@ -54,7 +54,7 @@ export class Game {
         return { ...this, io: null, room: null }
     }
 
-    attempt = (word: string, player: Player) => {
+    makeAttempt = (word: string, player: Player) => {
         if (!Game.isValid(word)) {
             player.socket.emit("game:attempt:invalid")
             return
@@ -63,15 +63,16 @@ export class Game {
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
 
+        // won condition
         const won = this.word == word
-
         if (won) {
             player.win(this.room.difficulty)
             player.socket.to(this.room.id).emit("player:win", player)
             Game.print(`${player.name} won`)
         }
 
-        if (player.history.length == 5 && !won) {
+        // lose condition
+        if (player.history.length == this.room.attempts && !won) {
             player.socket.to(this.room.id).emit("player:lose", player)
             player.lose()
         }

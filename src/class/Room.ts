@@ -10,13 +10,15 @@ export class Room {
     id: string
     host: Player
     name: string
-    created_at: Date
-    playing: boolean = false
 
+    created_at: Date
+
+    playing: boolean = false
     password?: string
     game?: Game
 
     difficulty: number = 5
+    attempts: number = 6
 
     players: Player[] = []
 

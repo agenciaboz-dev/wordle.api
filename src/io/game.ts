@@ -14,7 +14,7 @@ const stop = (socket: Socket) => {
 const attempt = (socket: Socket, attempt: string) => {
     const { room, player } = Room.findSocket(socket)
     if (player) {
-        room?.game?.attempt(attempt, player)
+        room?.game?.makeAttempt(attempt, player)
     }
 }
 
