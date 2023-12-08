@@ -36,7 +36,7 @@ export class Game {
         return normalize(words[random])
     }
 
-    static isValid = (attempt: string) => Game.word_list.includes(attempt)
+    static isValid = (attempt: string) => normalize(Game.word_list.join("")).split("").includes(normalize(attempt))
 
     constructor(room: Room, difficulty: number) {
         this.room = room
@@ -55,10 +55,10 @@ export class Game {
     }
 
     makeAttempt = (word: string, player: Player) => {
-        // if (!Game.isValid(word)) {
-        //     player.socket.emit("game:attempt:invalid")
-        //     return
-        // }
+        if (!Game.isValid(word)) {
+            player.socket.emit("game:attempt:invalid")
+            return
+        }
 
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
