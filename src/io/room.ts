@@ -6,7 +6,7 @@ import { getIoInstance } from "./socket"
 const alreadyConnected = (socket: Socket) => {
     const existing = Room.findSocket(socket)
     if (existing.player || existing.room) {
-        socket.emit("room:error", { error: "socket já conectado" })
+        // socket.emit("room:error", { error: "socket já conectado" })
         return true
     }
 }
@@ -17,14 +17,14 @@ const list = (socket: Socket) => {
 }
 
 const create = (socket: Socket, playerForm: NewPlayer, roomForm: NewRoom) => {
-    if (alreadyConnected(socket)) return
+    if (alreadyConnected(socket)) onPlayerDisconnected(socket)
 
     const player = new Player(playerForm, socket)
     const room = new Room(player, roomForm)
 }
 
 const join = (socket: Socket, room_id: string, playerForm: NewPlayer) => {
-    if (alreadyConnected(socket)) return
+    if (alreadyConnected(socket)) onPlayerDisconnected(socket)
     const room = Room.find(room_id)
 
     if (room) {
