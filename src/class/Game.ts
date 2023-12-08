@@ -36,7 +36,7 @@ export class Game {
         return normalize(words[random])
     }
 
-    static isValid = (attempt: string) => normalize(Game.word_list.join("")).split("").includes(normalize(attempt))
+    static isValid = (attempt: string) => normalize(Game.word_list.join("\n")).split("\n").includes(normalize(attempt))
 
     constructor(room: Room, difficulty: number) {
         this.room = room
