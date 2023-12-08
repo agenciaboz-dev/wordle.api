@@ -33,7 +33,7 @@ export const handleSocket = (socket: Socket) => {
     socket.on("room:list", () => room.list(socket))
     socket.on("room:new", (data: { player: NewPlayer; room: NewRoom }) => room.create(socket, data.player, data.room))
     socket.on("room:join", (data: { player: NewPlayer; room_id: string }) => room.join(socket, data.room_id, data.player))
-    socket.on("room:leave", (data: { player_id: string; room_id: string }) => room.leave(socket, data.room_id, data.player_id))
+    socket.on("room:leave", () => room.leave(socket))
     socket.on("room:update", (data) => room.update(socket, data))
     socket.on("room:reset", () => room.reset(socket))
 

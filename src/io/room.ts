@@ -33,9 +33,8 @@ const join = (socket: Socket, room_id: string, playerForm: NewPlayer) => {
     }
 }
 
-const leave = (socket: Socket, room_id: string, player_id: string) => {
-    const room = Room.find(room_id)
-    const player = room?.findPlayer(player_id)
+const leave = (socket: Socket) => {
+    const { room, player } = Room.findSocket(socket)
 
     if (player) {
         room?.removePlayer(player)
