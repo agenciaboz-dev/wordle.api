@@ -3,8 +3,8 @@ import { getIoInstance } from "../io/socket"
 import { DefaultEventsMap } from "socket.io/dist/typed-events"
 import { Room } from "./Room"
 import { Player } from "./Player"
-import { normalize } from "path"
 import { readFileSync } from "fs"
+import normalize from "../tools/normalize"
 
 export class Game {
     round: number = 0
@@ -55,16 +55,16 @@ export class Game {
     }
 
     makeAttempt = (word: string, player: Player) => {
-        if (!Game.isValid(word)) {
-            player.socket.emit("game:attempt:invalid")
-            return
-        }
+        // if (!Game.isValid(word)) {
+        //     player.socket.emit("game:attempt:invalid")
+        //     return
+        // }
 
         player.history.push(word)
         Game.print(`${player.name} attempted ${word}`)
 
         // won condition
-        const won = this.word == word
+        const won = normalize(this.word) == normalize(word)
         if (won) {
             player.win(this.room.difficulty)
             player.socket.to(this.room.id).emit("player:win", player)
