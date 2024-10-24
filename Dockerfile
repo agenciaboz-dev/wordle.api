@@ -13,9 +13,6 @@ RUN npm install --ignore-scripts
 # Copy the rest of the application code
 COPY . .
 
-# Generate Prisma client and format schema
-RUN npx prisma generate
-
 # Build the TypeScript application
 RUN npm run build
 
@@ -37,5 +34,10 @@ COPY --from=build /app/node_modules ./node_modules
 # Copy the built application from the build stage
 COPY --from=build /app/dist ./dist
 
+#Expose the aplication port
+EXPOSE 4120
+
 # Start the application
 CMD ["node", "dist/index.js"]
+
+

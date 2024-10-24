@@ -5,9 +5,9 @@ services:
     image: agenciaboz/bozletrando.api
     container_name: bozletrando.api
     environment:
-      - PORT=8089
+      - PORT=4120
     ports:
-      - "8089:8089"
+      - "4120:4120"
     network_mode: "host"
     restart: unless-stopped
     deploy:
@@ -21,3 +21,4 @@ services:
 volumes:
   static_volume:
     name: "bozletrando.api"
+
