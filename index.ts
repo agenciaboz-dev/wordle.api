@@ -9,6 +9,9 @@ import http from 'http'
 import fs from 'fs'
 import fileUpload from "express-fileupload"
 import { getIoInstance, handleSocket, initializeIoServer } from './src/io/socket'
+import { collectDefaultMetrics, register } from "prom-client"
+
+collectDefaultMetrics()
 
 dotenv.config()
 
@@ -20,7 +23,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(fileUpload())
-app.use('/api', router)
+app.use("/api", router)
+
+app.get("/metrics", async (req, res) => {
+    res.set("Content-Type", register.contentType)
+    res.end(await register.metrics())
+})
 
 try {
     const server = https.createServer(
