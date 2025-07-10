@@ -17,6 +17,7 @@ services:
           memory: 256M
     volumes:
       - static_volume:/app/static
+      - ./src/palavras.txt:/app/dist/src/palavras.txt
 
 volumes:
   static_volume:
