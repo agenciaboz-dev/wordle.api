@@ -3,7 +3,13 @@ import axios from "axios"
 const API_KEY = "AIzaSyA_wsqfgxeV9L-xi_I3ETBflPovaSFr-WU"
 const suffix = `?key=${API_KEY}`
 
-const api = axios.create({ baseURL: "https://generativelanguage.googleapis.com/v1beta3" })
+const api = axios.create({
+    baseURL: "https://generativelanguage.googleapis.com/v1beta",
+    headers: {
+        "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY,
+    },
+})
 
 const listModels = async () => {
     const response = await api.get(`models` + suffix)
@@ -19,40 +25,58 @@ const generateWord = async (theme: string) => {
                 {
                     input: {
                         author: "1",
-                        content: "supernatural tv show"
+                        content: "supernatural tv show",
                     },
                     output: {
                         author: "0",
-                        content: "Bobby"
-                    }
+                        content: "Bobby",
+                    },
                 },
                 {
                     input: {
                         author: "1",
-                        content: "programmer"
+                        content: "programmer",
                     },
                     output: {
                         author: "0",
-                        content: "coder"
-                    }
+                        content: "coder",
+                    },
                 },
                 {
                     input: {
                         author: "1",
-                        content: "animals"
+                        content: "animals",
                     },
                     output: {
                         author: "0",
-                        content: "snake"
-                    }
-                }
+                        content: "snake",
+                    },
+                },
             ],
-            messages: [{ author: "1", content: theme }]
-        }
+            messages: [{ author: "1", content: theme }],
+        },
     }
 
     const response = await api.post("/models/chat-bison-001:generateMessage" + suffix, data)
     console.log(response.data)
 }
 
-export default { listModels, generateWord }
+const generateRandomWord = async (difficulty: number) => {
+    const endpoint = `/models/gemini-2.0-flash:generateContent`
+    const response = await api.post(endpoint, {
+        contents: [
+            {
+                parts: [
+                    {
+                        // todo: enviar histórico para evitar palavras repetidas
+                        text: `Generate a single ${difficulty}-letter Brazilian Portuguese word for a word game. The word must be fun to guess. Output only the word, nothing else.`,
+                    },
+                ],
+            },
+        ],
+    })
+}
+
+// todo: gerar texto com ia para jogos com tema
+
+export default { listModels, generateWord, generateRandomWord }
